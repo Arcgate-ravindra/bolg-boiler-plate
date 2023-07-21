@@ -5,9 +5,13 @@ const register = {
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required().custom(password),
-    name: Joi.string().required(),
+    username: Joi.string().required(),
+    first_name: Joi.string().required(),
+    last_name: Joi.string().required(),
+    phone: Joi.string().required().length(10).pattern(/^\d{10}$/),
   }),
 };
+
 
 const login = {
   body: Joi.object().keys({

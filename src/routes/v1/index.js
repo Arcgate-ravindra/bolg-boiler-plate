@@ -1,11 +1,15 @@
-const express = require('express');
+const router = require('express').Router();
 const authRoute = require('./auth.route');
 const userRoute = require('./user.route');
+const blogRoute = require("./blog.route");
+const addressRoute = require('./address.route');
 const docsRoute = require('./docs.route');
 const config = require('../../config/config');
+const fileRoute = require('./file.route');
+const googleRoute = require('./google.route')
+const githubRoute = require('./github.route');
 
-const router = express.Router();
-
+ 
 const defaultRoutes = [
   {
     path: '/auth',
@@ -15,6 +19,26 @@ const defaultRoutes = [
     path: '/users',
     route: userRoute,
   },
+  {
+    path: '/address',
+    route: addressRoute,
+  },
+  {
+    path: '/blog',
+    route: blogRoute,
+  },
+  {
+    path : '/upload',
+    route : fileRoute
+  },
+  {
+    path : '/authg',
+    route : googleRoute
+  },
+  {
+    path : '/authg',
+    route : githubRoute
+  }
 ];
 
 const devRoutes = [

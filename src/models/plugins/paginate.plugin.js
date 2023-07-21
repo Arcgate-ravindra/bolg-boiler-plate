@@ -8,7 +8,7 @@ const paginate = (schema) => {
    * @property {number} limit - Maximum number of results per page
    * @property {number} totalPages - Total number of pages
    * @property {number} totalResults - Total number of documents
-   */
+   */ 
   /**
    * Query for documents with pagination
    * @param {Object} [filter] - Mongo filter

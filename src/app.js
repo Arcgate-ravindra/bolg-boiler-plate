@@ -13,6 +13,8 @@ const { authLimiter } = require('./middlewares/rateLimiter');
 const routes = require('./routes/v1');
 const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/ApiError');
+const session = require('express-session');
+const path = require('path');
 
 const app = express();
 
@@ -23,6 +25,10 @@ if (config.env !== 'test') {
 
 // set security HTTP headers
 app.use(helmet());
+  console.log(__dirname);
+//static content middleware
+app.use('/images/users', express.static(path.join(__dirname, 'images', 'users')));
+app.use('/images/blogs', express.static(path.join(__dirname, 'images', 'blogs')));
 
 // parse json request body
 app.use(express.json());
@@ -41,8 +47,16 @@ app.use(compression());
 app.use(cors());
 app.options('*', cors());
 
+// Use express-session middleware
+app.use(session({
+  secret: 'your-secret-key',
+  resave: false,
+  saveUninitialized: false
+}));
+
 // jwt authentication
 app.use(passport.initialize());
+app.use(passport.session())
 passport.use('jwt', jwtStrategy);
 
 // limit repeated failed requests to auth endpoints

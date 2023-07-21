@@ -3,17 +3,36 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const { toJSON, paginate } = require('./plugins');
 const { roles } = require('../config/roles');
+const slugify = require('slugify');
+
 
 const userSchema = mongoose.Schema(
   {
-    name: {
+    username: {
       type: String,
-      required: true,
       trim: true,
+    },
+    first_name: {
+      type: String,
+      trim: true,
+    },
+    last_name: {
+      type: String,
+      trim: true,
+    },
+    phone: {
+      type: String,
+      validate(value) {
+        if (!value.match(/^\d{10}$/)) {
+          throw new Error('phone number should only contain 10 digits');
+        }
+      },
+    },
+    profile: {
+      type: String,
     },
     email: {
       type: String,
-      required: true,
       unique: true,
       trim: true,
       lowercase: true,
@@ -25,7 +44,6 @@ const userSchema = mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
       trim: true,
       minlength: 8,
       validate(value) {
@@ -79,6 +97,12 @@ userSchema.pre('save', async function (next) {
   const user = this;
   if (user.isModified('password')) {
     user.password = await bcrypt.hash(user.password, 8);
+  }
+  if(user.isModified('username')){
+    user.username = await slugify(user.username, {
+      lower: true,
+      remove: /[*+~.()'"!:@]/g,
+    })
   }
   next();
 });
